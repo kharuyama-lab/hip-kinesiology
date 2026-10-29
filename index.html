@@ -1,8 +1,10 @@
 <!doctype html>
-<html lang="ja"><head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<html lang="ja">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1.0" />
 <title>Hip Kinesiology｜股関節運動学 3D教材</title>
+<!-- v1.0.1 rendering repair: remove stale canvases; preserve instructor-calibrated hip center. -->
 <style>
 :root{color-scheme:dark;--bg:#0b1220;--panel:#111e32f2;--edge:#33465e;--text:#e7eefb;--muted:#a5b6d1;--accent:#5aa8fd}
 *{box-sizing:border-box}html,body{width:100%;height:100%;margin:0;overflow:hidden;font:13px/1.5 system-ui,-apple-system,"Hiragino Kaku Gothic ProN","Noto Sans JP",sans-serif;background:var(--bg);color:var(--text)}
@@ -161,7 +163,7 @@ h1{font-size:17px;line-height:1.2;margin:0 0 4px}.sub{color:var(--muted);font-si
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}</script>
 </head>
 <body>
-<div id="view"><canvas data-engine="three.js r160" width="2278" height="1896" style="display: block; width: 1519px; height: 1264px; touch-action: none;"></canvas></div><button type="button" id="mobilePanelToggle" aria-expanded="true" aria-controls="ui">操作パネル</button><div id="tissueHover" role="status" aria-live="off" style="display: none; left: 1165.33px; top: 607px;"><span class="tissue-category">骨</span><span class="tissue-ja">右大腿骨</span><span class="tissue-en">Femur</span></div><div id="mask" class="">3D解剖モデルを読み込み中…</div>
+<div id="view"></div><button type="button" id="mobilePanelToggle" aria-expanded="false" aria-controls="ui">操作パネル</button><div id="tissueHover" role="status" aria-live="off"></div><div id="mask">3D解剖モデルを読み込み中…</div>
 <nav id="viewToolbar" aria-label="3D視点操作">
  <div class="toolbar-row" aria-label="視点"><button type="button" data-view="front">前面</button><button type="button" data-view="back">後面</button><button type="button" data-view="lateral">外側</button><button type="button" data-view="iso" class="active">斜め3D</button></div>
  <div class="toolbar-row"><button type="button" id="frameHip">股関節</button><button type="button" id="frameSkeleton">全体</button></div>
@@ -171,25 +173,25 @@ h1{font-size:17px;line-height:1.2;margin:0 0 4px}.sub{color:var(--muted);font-si
  <div class="sub">右股関節 ｜ 骨運動・靭帯緊張傾向・筋作用</div>
  <div class="section-title">① 学習モード</div>
  <div class="btn-row">
-  <button class="" data-mode="atlas">静止解剖</button>
-  <button data-mode="lig" class="active">関節運動・靭帯・筋作用</button>
+  <button class="active" data-mode="atlas">静止解剖</button>
+  <button data-mode="lig">関節運動・靭帯・筋作用</button>
  </div>
  <div class="section">
   <div class="section-title">② 表示する組織</div>
   <div id="boneSection" class="structure-block"><div class="structure-heading"><strong>骨</strong><div class="group-controls" role="group" aria-label="骨の一括表示">
-   <button type="button" data-master="bones" data-preset-state="on" class="preset-active" aria-pressed="true">ON</button><button type="button" data-master="bones" data-preset-state="transparent" aria-pressed="false">透過30%</button><button type="button" data-master="bones" data-preset-state="off" aria-pressed="false">OFF</button>
-  </div></div><div id="boneItems" class="hidden"><input id="pelvis" type="checkbox" checked=""><input id="pelvisLeft" type="checkbox" checked=""><input id="sacrum" type="checkbox" checked=""><input id="coccyx" type="checkbox" checked=""><input id="lumbar1" type="checkbox" checked=""><input id="lumbar2" type="checkbox" checked=""><input id="lumbar3" type="checkbox" checked=""><input id="lumbar4" type="checkbox" checked=""><input id="lumbar5" type="checkbox" checked=""><input id="femur" type="checkbox" checked=""><input id="tibiaRight" type="checkbox" checked=""><input id="fibulaRight" type="checkbox" checked=""></div></div>
+   <button type="button" data-master="bones" data-preset-state="on">ON</button><button type="button" data-master="bones" data-preset-state="transparent">透過30%</button><button type="button" data-master="bones" data-preset-state="off">OFF</button>
+  </div></div><div id="boneItems" class="hidden"><input id="pelvis" type="checkbox" checked><input id="pelvisLeft" type="checkbox" checked><input id="sacrum" type="checkbox" checked><input id="coccyx" type="checkbox" checked><input id="lumbar1" type="checkbox" checked><input id="lumbar2" type="checkbox" checked><input id="lumbar3" type="checkbox" checked><input id="lumbar4" type="checkbox" checked><input id="lumbar5" type="checkbox" checked><input id="femur" type="checkbox" checked><input id="tibiaRight" type="checkbox" checked><input id="fibulaRight" type="checkbox" checked></div></div>
   <div id="ligSection" class="structure-block"><div class="structure-heading"><strong>靭帯</strong><div class="group-controls" role="group" aria-label="靭帯の一括表示">
-   <button type="button" data-master="ligaments" data-preset-state="on" class="preset-active" aria-pressed="true">ON</button><button type="button" data-master="ligaments" data-preset-state="off" aria-pressed="false">OFF</button>
-  </div></div><div id="ligItems" class="hidden"><input id="ilio" type="checkbox" checked=""><input id="pubo" type="checkbox" checked=""><input id="ischio" type="checkbox" checked=""></div>
+   <button type="button" data-master="ligaments" data-preset-state="on">ON</button><button type="button" data-master="ligaments" data-preset-state="off">OFF</button>
+  </div></div><div id="ligItems" class="hidden"><input id="ilio" type="checkbox" checked><input id="pubo" type="checkbox" checked><input id="ischio" type="checkbox" checked></div>
   <div class="pose-presets">
    <div><button data-preset="cpp">しまりの肢位</button><div class="pose-hint">伸展＋外転＋内旋</div></div>
    <div><button data-preset="lpp">ゆるみの肢位</button><div class="pose-hint">屈曲＋外転＋外旋</div></div>
   </div></div>
   <div id="muscleSection" class="structure-block"><div class="structure-heading"><strong>筋</strong><div class="group-controls" role="group" aria-label="筋の一括表示">
-   <button type="button" data-master="muscles" data-preset-state="on" aria-pressed="false">すべてON</button><button type="button" data-master="muscles" data-preset-state="transparent" aria-pressed="false">透過30%</button><button type="button" data-master="muscles" data-preset-state="off" class="preset-active" aria-pressed="true">すべてOFF</button>
+   <button type="button" data-master="muscles" data-preset-state="on">すべてON</button><button type="button" data-master="muscles" data-preset-state="transparent">透過30%</button><button type="button" data-master="muscles" data-preset-state="off">すべてOFF</button>
   </div></div>
-  <input id="itBand" type="checkbox" class="hidden" aria-hidden="true" tabindex="-1">
+  <input id="itBand" type="checkbox" class="hidden" aria-hidden="true" tabindex="-1" />
   <div id="groupButtons" class="group-shortcuts" role="group" aria-label="協働筋群のプリセット">
    <button type="button" data-group="flex">屈曲筋群</button><button type="button" data-group="ext">伸展筋群</button><button type="button" data-group="abd">外転筋群</button><button type="button" data-group="add">内転筋群</button><button type="button" data-group="er">外旋筋群</button><button type="button" data-group="ir">内旋筋群</button>
   </div>
@@ -199,52 +201,52 @@ h1{font-size:17px;line-height:1.2;margin:0 0 4px}.sub{color:var(--muted);font-si
   <details id="muscleExtras"><summary>その他の筋操作</summary>
    <label class="line"><input id="autoMuscles" type="checkbox">運動方向に合わせて筋群を自動選択</label>
    <div class="small" style="margin:9px 0 5px">個別筋の運動例</div>
-   <select id="muscleSelect" style="width:100%;background:#1b2d47;color:#e7eefb;padding:7px;border:1px solid #405772;border-radius:6px"><option value="glutMax">大殿筋 → 伸展</option><option value="glutMed">中殿筋 → 外転</option><option value="glutMin">小殿筋 → 外転</option><option value="iliacus">腸骨筋 → 屈曲</option><option value="adductor">大内転筋 → 内転</option><option value="psoas">大腰筋 → 屈曲</option><option value="rectus">大腿直筋 → 屈曲</option><option value="sartorius">縫工筋 → 屈曲</option><option value="tfl">大腿筋膜張筋 → 外転</option><option value="pectineus">恥骨筋 → 内転</option><option value="addLong">長内転筋 → 内転</option><option value="addBrevis">短内転筋 → 内転</option><option value="gracilis">薄筋 → 内転</option><option value="semiten">半腱様筋 → 伸展</option><option value="semimem">半膜様筋 → 伸展</option><option value="bicepsLong">大腿二頭筋長頭 → 伸展</option><option value="addMin" disabled="">小内転筋 → 内転</option><option value="piriformis">梨状筋 → 外旋</option><option value="obturatorIn">内閉鎖筋 → 外旋</option><option value="obturatorEx">外閉鎖筋 → 外旋</option><option value="quadratus">大腿方形筋 → 外旋</option><option value="gemSup">上双子筋 → 外旋</option><option value="gemInf">下双子筋 → 外旋</option></select>
+   <select id="muscleSelect" style="width:100%;background:#1b2d47;color:#e7eefb;padding:7px;border:1px solid #405772;border-radius:6px"></select>
    <div style="margin-top:6px"><button id="musclePlay">選択した筋の運動を再生</button></div>
    <div id="muscleInfo" class="small hidden"></div>
   </details>
   </div>
  </div>
- <div id="movementPanel" class="section">
+ <div id="movementPanel" class="section hidden">
   <div class="section-title">③ 関節運動</div>
-  <div class="btn-row"><button class="" data-axis="flex">屈曲・伸展</button><button data-axis="abd" class="">外転・内転</button><button data-axis="rot" class="active">外旋・内旋</button></div>
-  <div class="line"><span id="negative">内旋</span><span class="angle" id="angle">外旋 7°</span><span id="positive">外旋</span></div>
-  <input id="motionInput" type="range" min="-45" max="45" step="1" value="0">
-  <div class="btn-row"><button id="play">停止</button><button id="reset">中間位</button></div>
+  <div class="btn-row"><button class="active" data-axis="flex">屈曲・伸展</button><button data-axis="abd">外転・内転</button><button data-axis="rot">外旋・内旋</button></div>
+  <div class="line"><span id="negative">伸展</span><span class="angle" id="angle">中間位</span><span id="positive">屈曲</span></div>
+  <input id="motionInput" type="range" min="-20" max="110" step="1" value="0" />
+  <div class="btn-row"><button id="play">自動往復</button><button id="reset">中間位</button></div>
 
  </div>
- <span id="poseText" class="hidden" aria-hidden="true">屈曲 +0° / 外転 +0° / 外旋 +7°</span>
- <details id="tensionPanel" class="section"><summary>靭帯の緊張判定を表示</summary>
-  <div class="tension"><span><i class="beacon" style="background:#508efa"></i>腸骨大腿・上部</span><span id="tIlioSup" data-tone="low">−</span></div>
-  <div class="tension"><span><i class="beacon" style="background:#508efa"></i>腸骨大腿・下部</span><span id="tIlioInf" data-tone="low">−</span></div>
-  <div class="tension"><span><i class="beacon" style="background:#36c98c"></i>恥骨大腿</span><span id="tPubo" data-tone="low">−</span></div>
-  <div class="tension"><span><i class="beacon" style="background:#fc9d55"></i>坐骨大腿</span><span id="tIschio" data-tone="low">−</span></div>
+ <span id="poseText" class="hidden" aria-hidden="true"></span>
+ <details id="tensionPanel" class="section hidden"><summary>靭帯の緊張判定を表示</summary>
+  <div class="tension"><span><i class="beacon" style="background:#508efa"></i>腸骨大腿・上部</span><span id="tIlioSup" data-tone="low">―</span></div>
+  <div class="tension"><span><i class="beacon" style="background:#508efa"></i>腸骨大腿・下部</span><span id="tIlioInf" data-tone="low">―</span></div>
+  <div class="tension"><span><i class="beacon" style="background:#36c98c"></i>恥骨大腿</span><span id="tPubo" data-tone="low">―</span></div>
+  <div class="tension"><span><i class="beacon" style="background:#fc9d55"></i>坐骨大腿</span><span id="tIschio" data-tone="low">―</span></div>
  </details>
- <details class="section" id="calibrationPanel" open="">
+ <details class="section" id="calibrationPanel">
   <summary>教員用：回転中心の確認・微調整（通常操作は不要）</summary>
   <div class="small" style="margin-top:6px">骨頭中心はモデル形状から起動時に自動推定し、同一ブラウザ内に記録します。通常は6点選択不要です。推定できない場合は警告を表示します。</div>
   <div class="section-title" style="margin-top:12px">坐骨大腿靭帯の付着部（教員確認用）</div>
   <button id="anchorMarkers" type="button">推定した両端の位置を表示</button>
-  <div class="small" id="anchorStatus">坐骨大腿靭帯：元モデルの骨盤側・大腿骨側の端部をそれぞれ固定しました（338頂点）。</div>
+  <div class="small" id="anchorStatus">運動モードに切り替えると元モデルから両端を推定します。</div>
   <div class="small">橙：坐骨・寛骨臼後下縁側（骨盤固定）／黄：大腿骨頸部・大転子基部側（大腿骨に追従）。表示点は3Dメッシュからの自動推定で、検証済みの付着座標ではありません。</div>
-  <div class="focus" id="calibrationResult" style="margin-top:6px">回転中心：手動調整値を保存しました。</div>
+  <div class="focus" id="calibrationResult" style="margin-top:6px">骨頭中心を自動設定中…</div>
   <div class="btn-row"><button id="calibrateBtn">6点指定を開始（任意）</button><button id="clearCenter">保存した中心を解除・再推定</button></div>
   <div class="btn-row" style="margin-top:7px"><button id="exportShared">現在の中心を固定した配布用HTMLを生成</button></div>
   <p class="small" id="sharedCenterInfo">教員が中心を確定後にこのボタンを押すと、全利用者共通の中心座標をHTML内に埋め込んだ配布版を作れます。ブラウザごとの再校正は不要です。</p>
   <p class="small">6点指定中は「点を指定」ボタンを押してからクリックします。ドラッグ中の視点操作は記録しません。</p>
   <div id="pointCaptureWrap" class="hidden"><button id="capturePoint">点を指定（0/6）</button><button id="undoPoint">直前を取り消す</button></div>
-  <details open=""><summary>手動微調整（必要時のみ）</summary>
+  <details><summary>手動微調整（必要時のみ）</summary>
    <div class="small">大腿骨Bounding Box内の相対位置（0–100%）</div>
-   <div>左右 X <span id="vx">56.4%</span><input type="range" id="px" min="0" max="100" step="0.1" value="50"></div>
-   <div>上下 Y <span id="vy">94.9%</span><input type="range" id="py" min="0" max="100" step="0.1" value="94"></div>
-   <div>前後 Z <span id="vz">69%</span><input type="range" id="pz" min="0" max="100" step="0.1" value="50"></div>
+   <div>左右 X <span id="vx">0%</span><input type="range" id="px" min="0" max="100" step="0.1" value="50"></div>
+   <div>上下 Y <span id="vy">0%</span><input type="range" id="py" min="0" max="100" step="0.1" value="94"></div>
+   <div>前後 Z <span id="vz">0%</span><input type="range" id="pz" min="0" max="100" step="0.1" value="50"></div>
   </details>
  </details>
- <details class="section" open=""><summary>読み込み状況・手動GLB読み込み</summary>
-  <div id="status" class="status" style="color: rgb(191, 222, 253);">読み込み中…</div>
+ <details class="section"><summary>読み込み状況・手動GLB読み込み</summary>
+  <div id="status" class="status">読み込み中…</div>
   <div class="small">3Dモデルを外部から自動取得。失敗時はローカルGLBを選択できます。</div>
   <div class="btn-row"><button id="retryOnline">オンライン再試行</button><a href="https://nqwrc.github.io/3d-anatomy/" target="_blank" rel="noopener">元のアトラス</a></div>
-  <input id="localGLB" type="file" accept=".glb" multiple="" style="font-size:11px;margin-top:5px;max-width:100%">
+  <input id="localGLB" type="file" accept=".glb" multiple style="font-size:11px;margin-top:5px;max-width:100%" />
   <details><summary>GLB入手先</summary>
    <a target="_blank" rel="noopener" href="https://github.com/nqwrc/3d-anatomy/blob/master/public/models/skeletal.glb">skeletal.glb</a> /
    <a target="_blank" rel="noopener" href="https://github.com/nqwrc/3d-anatomy/blob/master/public/models/joints.glb">joints.glb</a> /
@@ -260,7 +262,7 @@ h1{font-size:17px;line-height:1.2;margin:0 0 4px}.sub{color:var(--muted);font-si
   <a target="_blank" rel="noopener" href="https://pubmed.ncbi.nlm.nih.gov/24913440/">Hidaka et al.</a></p>
  </details>
 </aside>
-<div id="footnote" class="right-note"></div>
+<div id="footnote" class="right-note">静止解剖標本：元の形状と配置を保持しています。</div>
 <script type="module">
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -288,7 +290,7 @@ const camera=new THREE.PerspectiveCamera(39,innerWidth/innerHeight,0.001,100000)
 const renderer=new THREE.WebGLRenderer({antialias:true,powerPreference:'high-performance'});
 renderer.setSize(innerWidth,innerHeight);renderer.setPixelRatio(Math.min(devicePixelRatio,2));
 renderer.outputColorSpace=THREE.SRGBColorSpace;
-$('view').appendChild(renderer.domElement);
+$('view').replaceChildren(renderer.domElement); // Remove stale canvas, then insert active renderer
 const controls=new OrbitControls(camera,renderer.domElement);controls.enableDamping=true;controls.dampingFactor=.08;
 scene.add(new THREE.HemisphereLight(0xd5e8ff,0x41536d,2.1));
 for(const [p,i] of [[[3,6,6],2.0],[[-4,1,-5],1.15]]){const l=new THREE.DirectionalLight(0xffffff,i);l.position.set(...p);scene.add(l)}
@@ -1330,7 +1332,12 @@ $('exportShared').addEventListener('click',()=>{
  const sz=bbox.getSize(new THREE.Vector3()),p=pivot.position;
  const config={signature:cacheSignature(),xyz:['x','y','z'].map(d=>(p[d]-bbox.min[d])/sz[d]),source:'teacher-fixed'};
  // Strip runtime-created controls before serialising, otherwise they would duplicate on next load.
- const clean=document.documentElement.cloneNode(true);
+   const clean=document.documentElement.cloneNode(true);
+  // Never embed the live WebGL canvas into a distributed copy.
+  // Otherwise the next renderer may be placed below a stale, blank canvas.
+  clean.querySelector('#view')?.replaceChildren();
+  const hoverClone=clean.querySelector('#tissueHover');
+  if(hoverClone){hoverClone.replaceChildren();hoverClone.style.display='none';}
  clean.querySelector('body')?.classList.remove('mobile-panel-collapsed');
  clean.querySelector('#muscleItems')?.replaceChildren();
  clean.querySelectorAll('[data-transparent]').forEach(el=>el.remove());
